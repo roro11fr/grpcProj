@@ -16,7 +16,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.12'
+          python-version: '3.14'
 
       - name: Install deps
         run: |
@@ -34,9 +34,4 @@ jobs:
         run: isort . --check-only --profile black
 
       - name: Tests
-        run: |
-          if ls tests/test_*.py >/dev/null 2>&1 || ls **/tests/test_*.py >/dev/null 2>&1; then
-            pytest -q
-          else
-            echo "No tests found, skipping pytest."
-          fi
+        run: pytest -q
