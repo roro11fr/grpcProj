@@ -1,0 +1,30 @@
+repos:
+  - repo: https://github.com/psf/black
+    rev: 24.8.0
+    hooks:
+      - id: black
+
+  - repo: https://github.com/pycqa/isort
+    rev: 5.13.2
+    hooks:
+      - id: isort
+        args: ["--profile", "black"]
+
+  - repo: https://github.com/pycqa/flake8
+    rev: 7.0.0
+    hooks:
+      - id: flake8
+
+  - repo: local
+    hooks:
+      - id: check-branch-name
+        name: Validate branch name (feature|fix|chore)/(TASK-)?123–1234 or developer
+        entry: python .githooks/check_branch_name.py
+        language: system
+        pass_filenames: false
+
+      - id: check-commit-message
+        name: Validate commit message ((TASK-)?123–1234 - summary)
+        entry: python .githooks/check_commit_msg.py
+        language: system
+        stages: [commit-msg]
