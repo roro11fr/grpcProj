@@ -22,9 +22,6 @@ dist/
 .DS_Store
 Thumbs.db
 
-# --- gRPC generated code ---
-services/weather/interfaces/grpc/generated/*.py
-
 # --- Test / coverage ---
 .coverage
 htmlcov/
