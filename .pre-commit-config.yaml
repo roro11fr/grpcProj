@@ -14,6 +14,16 @@ repos:
     rev: 7.0.0
     hooks:
       - id: flake8
+        exclude: ^services/weather/interfaces/grpc/generated/
+
+
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.6.0
+    hooks:
+      - id: end-of-file-fixer
+      - id: trailing-whitespace
+      - id: check-yaml
+      - id: check-added-large-files
 
   - repo: local
     hooks:
@@ -28,3 +38,6 @@ repos:
         entry: python .githooks/check_commit_msg.py
         language: system
         stages: [commit-msg]
+
+exclude: |
+  ^(services/weather/interfaces/grpc/generated/|env/|__pycache__/|migrations/|.venv/)

@@ -1,0 +1,66 @@
+# ============================================================
+#   Git line endings and diff configuration
+#   Compatible with Windows + Linux + Docker environments
+# ============================================================
+
+# ------------------------------------------------------------
+# Normalize all text files to LF in the repository
+# (Git will convert to CRLF on checkout if core.autocrlf=true)
+# ------------------------------------------------------------
+* text eol=lf
+
+# ------------------------------------------------------------
+# Language-specific overrides
+# ------------------------------------------------------------
+# Python source code
+*.py text eol=lf diff=python
+
+# Shell scripts
+*.sh text eol=lf
+
+# YAML and JSON (configs, workflows, CI/CD)
+*.yaml text eol=lf
+*.yml text eol=lf
+*.json text eol=lf
+
+# Markdown and documentation
+*.md text eol=lf
+
+# Docker, Makefile, environment files
+Dockerfile text eol=lf
+Makefile text eol=lf
+*.env text eol=lf
+
+# Requirements / dependency files
+requirements*.txt text eol=lf
+
+# Protobuf definition files
+*.proto text eol=lf
+
+# ------------------------------------------------------------
+# Binary files (no line ending normalization)
+# ------------------------------------------------------------
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.pdf binary
+*.zip binary
+*.gz binary
+*.tar binary
+*.db binary
+
+# ------------------------------------------------------------
+# gRPC generated code (keep as-is, don't normalize or diff)
+# ------------------------------------------------------------
+services/weather/interfaces/grpc/generated/* -text
+
+# ------------------------------------------------------------
+# Misc
+# ------------------------------------------------------------
+# Ignore environment or IDE files for line-ending normalization
+.env binary
+*.pkl binary
+*.sqlite binary
+*.db binary
