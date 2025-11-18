@@ -1,0 +1,43 @@
+# --- Python ---
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.py.class
+.env
+.venv/
+env/
+venv/
+*.egg-info/
+build/
+dist/
+
+# --- IDE / Editor ---
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# --- OS files ---
+.DS_Store
+Thumbs.db
+
+# --- gRPC generated code ---
+services/weather/interfaces/grpc/generated/*.py
+
+# --- Test / coverage ---
+.coverage
+htmlcov/
+pytest_cache/
+
+# --- Docker / Compose ---
+*.log
+*.pid
+*.db
+*.sqlite3
+docker-compose.override.yml
+
+# --- Misc ---
+*.bak
+*.tmp
+*.lock
