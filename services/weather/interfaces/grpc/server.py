@@ -1,24 +1,21 @@
-import asyncio
+from concurrent import futures
 
 import grpc
 
-from services.weather.interfaces.grpc import health_pb2, health_pb2_grpc
+from services.weather.interfaces.grpc import health_pb2_grpc
+from services.weather.interfaces.grpc.implementations.health_service import (
+    HealthServiceImpl,
+)
 
 
-class HealthServiceImpl(health_pb2_grpc.HealthServiceServicer):
-    async def HealthCheck(self, request, context):
-        print(f"Received request: {request}")
-        return health_pb2.HealthCheckResponse(status="SERVING")
-
-
-async def serve(host: str = "0.0.0.0", port: int = 50051):
-    server = grpc.aio.server(options=[("grpc.so_reuseport", 0)])
+def serve():
+    server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
     health_pb2_grpc.add_HealthServiceServicer_to_server(HealthServiceImpl(), server)
-    server.add_insecure_port(f"{host}:{port}")
-    await server.start()
-    print(f"[gRPC] Health server started on {host}:{port}")
-    await server.wait_for_termination()
+    server.add_insecure_port("[::]:50051")
+    print("gRPC Health Server started on port 50051")
+    server.start()
+    server.wait_for_termination()
 
 
 if __name__ == "__main__":
-    asyncio.run(serve())
+    serve()
