@@ -25,13 +25,13 @@ jobs:
           pip install pytest flake8 black isort
 
       - name: Lint (flake8)
-        run: flake8 .
+        run: flake8 . --exclude=env,.venv,__pycache__,services/weather/interfaces/grpc/generated
 
       - name: Format check (black)
-        run: black --check .
+        run: black --check . --exclude 'services/weather/interfaces/grpc/generated/'
 
       - name: Import order (isort)
-        run: isort . --check-only --profile black
+        run: isort . --check-only --profile black --skip services/weather/interfaces/grpc/generated
 
       - name: Tests
         run: |
