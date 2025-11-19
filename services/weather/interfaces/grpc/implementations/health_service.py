@@ -1,4 +1,4 @@
-from services.weather.interfaces.grpc import health_pb2, health_pb2_grpc
+from services.weather.interfaces.grpc.generated import health_pb2, health_pb2_grpc
 
 
 class HealthServiceImpl(health_pb2_grpc.HealthServiceServicer):

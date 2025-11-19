@@ -2,7 +2,7 @@ from concurrent import futures
 
 import grpc
 
-from services.weather.interfaces.grpc import health_pb2_grpc
+from services.weather.interfaces.grpc.generated import health_pb2_grpc
 from services.weather.interfaces.grpc.implementations.health_service import (
     HealthServiceImpl,
 )
