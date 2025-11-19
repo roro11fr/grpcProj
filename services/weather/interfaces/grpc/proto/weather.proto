@@ -1,0 +1,16 @@
+syntax = "proto3";
+package weather.current.v1;
+
+message GetCurrentWeatherRequest {
+  string city = 1;
+}
+
+message GetCurrentWeatherResponse {
+  string city = 1;
+  double temp_c = 2;
+  string description = 3;
+}
+
+service WeatherService {
+  rpc GetCurrentWeather(GetCurrentWeatherRequest) returns (GetCurrentWeatherResponse);
+}
