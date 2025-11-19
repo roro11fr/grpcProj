@@ -14,7 +14,7 @@ repos:
     rev: 7.0.0
     hooks:
       - id: flake8
-        exclude: ^services/weather/interfaces/grpc/generated/
+        exclude: ^services/weather/interfaces/grpc/health_pb2.*\.py$
 
 
   - repo: https://github.com/pre-commit/pre-commit-hooks
@@ -40,4 +40,4 @@ repos:
         stages: [commit-msg]
 
 exclude: |
-  ^(services/weather/interfaces/grpc/generated/|env/|__pycache__/|migrations/|.venv/)
+  ^(services/weather/interfaces/grpc/health_pb2.*\.py$|env/|__pycache__/|migrations/|.venv/)

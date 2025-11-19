@@ -54,8 +54,8 @@ requirements*.txt text eol=lf
 # ------------------------------------------------------------
 # gRPC generated code (keep as-is, don't normalize or diff)
 # ------------------------------------------------------------
-services/weather/interfaces/grpc/generated/* -text
-
+services/weather/interfaces/grpc/health_pb2.py -text
+services/weather/interfaces/grpc/health_pb2_grpc.py -text
 # ------------------------------------------------------------
 # Misc
 # ------------------------------------------------------------
