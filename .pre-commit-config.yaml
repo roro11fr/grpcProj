@@ -3,19 +3,20 @@ repos:
     rev: 24.8.0
     hooks:
       - id: black
+        exclude: ^services/weather/interfaces/grpc/generated/
 
   - repo: https://github.com/pycqa/isort
     rev: 5.13.2
     hooks:
       - id: isort
         args: ["--profile", "black"]
+        exclude: ^services/weather/interfaces/grpc/generated/
 
   - repo: https://github.com/pycqa/flake8
     rev: 7.0.0
     hooks:
       - id: flake8
-        exclude: ^services/weather/interfaces/grpc/health_pb2.*\.py$
-
+        exclude: ^services/weather/interfaces/grpc/generated/
 
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.6.0
@@ -40,4 +41,7 @@ repos:
         stages: [commit-msg]
 
 exclude: |
-  ^(services/weather/interfaces/grpc/health_pb2.*\.py$|env/|__pycache__/|migrations/|.venv/)
+  (^env/|
+   ^\.venv/|
+   __pycache__/|
+   migrations/)
