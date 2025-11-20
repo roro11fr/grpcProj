@@ -15,7 +15,7 @@ class WeatherServiceImpl(weather_pb2_grpc.WeatherServiceServicer):
 
         try:
             name, temp_c, description, humidity, wind_speed = (
-                await self.client.get_current_min(city)
+                await self.client.get_current_weather(city)
             )
             return weather_pb2.GetCurrentWeatherResponse(
                 city=name,
