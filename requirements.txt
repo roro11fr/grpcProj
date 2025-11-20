@@ -28,6 +28,7 @@ iniconfig==2.3.0
 isort==7.0.0
 jmespath==0.10.0
 mccabe==0.7.0
+motor==3.6.0
 multidict==6.7.0
 mypy_extensions==1.1.0
 nodeenv==1.9.1
@@ -43,6 +44,7 @@ protobuf==6.33.1
 pycodestyle==2.14.0
 pycparser==2.23
 pyflakes==3.4.0
+pymongo==4.9.2
 pyOpenSSL==25.1.0
 pytest==8.3.3
 pytest-asyncio==0.24.0
