@@ -9,16 +9,27 @@ class WeatherServiceImpl(weather_pb2_grpc.WeatherServiceServicer):
         self.client = OpenWeatherClient()
 
     async def GetCurrentWeather(self, request, context):
+        city = (request.city or "").strip()
+        if not city:
+            await context.abort(grpc.StatusCode.INVALID_ARGUMENT, "city is required")
+
         try:
-            name, temp_c, description = await self.client.get_current_min(request.city)
+            name, temp_c, description, humidity, wind_speed = (
+                await self.client.get_current_min(city)
+            )
             return weather_pb2.GetCurrentWeatherResponse(
                 city=name,
                 temp_c=temp_c,
                 description=description,
+                humidity=humidity,
+                wind_speed=wind_speed,
             )
+
         except PermissionError as e:
             await context.abort(grpc.StatusCode.PERMISSION_DENIED, str(e))
         except LookupError as e:
             await context.abort(grpc.StatusCode.NOT_FOUND, str(e))
+        except ConnectionError as e:
+            await context.abort(grpc.StatusCode.UNAVAILABLE, str(e))
         except Exception as e:
             await context.abort(grpc.StatusCode.INTERNAL, f"Internal error: {e}")

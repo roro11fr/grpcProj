@@ -9,6 +9,8 @@ message GetCurrentWeatherResponse {
   string city = 1;
   double temp_c = 2;
   string description = 3;
+  int32 humidity = 4;
+  double wind_speed = 5;
 }
 
 service WeatherService {
