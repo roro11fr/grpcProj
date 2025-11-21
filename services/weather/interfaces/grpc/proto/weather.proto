@@ -1,5 +1,5 @@
 syntax = "proto3";
-package weather.current.v1;
+package weather.v1;
 
 message GetCurrentWeatherRequest {
   string city = 1;
@@ -11,8 +11,27 @@ message GetCurrentWeatherResponse {
   string description = 3;
   int32 humidity = 4;
   double wind_speed = 5;
+  string ts = 6; // ISO 8601
+}
+
+message GetRecentReadingsRequest {
+  int32 limit = 1;
+}
+
+message WeatherReading {
+  string city = 1;
+  double temp_c = 2;
+  string description = 3;
+  int32 humidity = 4;
+  double wind_speed = 5;
+  string ts = 6;
+}
+
+message GetRecentReadingsResponse {
+  repeated WeatherReading items = 1;
 }
 
 service WeatherService {
   rpc GetCurrentWeather(GetCurrentWeatherRequest) returns (GetCurrentWeatherResponse);
+  rpc GetRecentReadings(GetRecentReadingsRequest) returns (GetRecentReadingsResponse);
 }

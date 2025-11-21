@@ -10,14 +10,10 @@ from services.weather.interfaces.grpc.implementations.health_service import (
 from services.weather.interfaces.grpc.implementations.weather_service import (
     WeatherServiceImpl,
 )
-from services.weather.interfaces.grpc.interceptors.api_key_interceptor import (
-    ApiKeyAuthInterceptor,
-)
 
 
 async def serve():
-    interceptors = [ApiKeyAuthInterceptor()]
-    server = grpc.aio.server(interceptors=interceptors)
+    server = grpc.aio.server()
 
     health_pb2_grpc.add_HealthServiceServicer_to_server(HealthServiceImpl(), server)
     weather_pb2_grpc.add_WeatherServiceServicer_to_server(WeatherServiceImpl(), server)

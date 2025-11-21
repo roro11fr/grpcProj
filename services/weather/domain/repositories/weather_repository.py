@@ -50,3 +50,16 @@ class WeatherRepository:
             projection={"_id": 0},
         ).sort("observed_at_unix", -1)
         return await cursor.to_list(length=limit or 0)
+
+    async def find_recent(self, limit: int = 2):
+        """
+        Returnează ultimele N înregistrări, sortate descrescător după observed_at_unix.
+        """
+        coll = await get_weather_collection()  # folosește ce ai deja
+        cursor = (
+            coll.find({}, projection={"_id": 0})
+            .sort("observed_at_unix", -1)
+            .limit(max(1, int(limit)))
+        )
+        # pentru Motor: to_list
+        return await cursor.to_list(length=limit or 0)
