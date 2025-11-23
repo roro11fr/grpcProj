@@ -1,4 +1,3 @@
-# tests/gateway/test_gateway.py
 import pytest
 from fastapi.testclient import TestClient
 

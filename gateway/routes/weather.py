@@ -56,7 +56,7 @@ async def get_weather(
 
 @router.get("/recent")
 async def get_recent(
-    limit: int = Query(10, MIN_LIMIT=1, MAX_LIMIT=5000),
+    limit: int = Query(10, ge=1, le=5000),
     city: str | None = Query(None, min_length=1),
     mongo: Annotated[AsyncIOMotorClient, Depends(get_mongo)] = None,
 ):

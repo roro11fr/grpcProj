@@ -7,6 +7,7 @@ from grpc.aio import Channel
 from motor.motor_asyncio import AsyncIOMotorClient
 
 from gateway.core.settings import get_settings
+from gateway.routes import weather as weather_routes
 from gateway.routes.health import router as health_router
 from gateway.routes.weather import router as weather_router
 from gateway.services.db_client import create_mongo_client
@@ -36,16 +37,14 @@ def create_app() -> FastAPI:
         allow_headers=["*"],
     )
 
-    from gateway.routes import weather as weather_routes
-
     def provide_channel() -> Channel:
         return app.state.grpc_channel
 
     def provide_mongo() -> AsyncIOMotorClient:
         return app.state.mongo_client
 
-    weather_routes._provide_channel = provide_channel  # type: ignore
-    weather_routes._provide_mongo = provide_mongo  # type: ignore
+    weather_routes._provide_channel = provide_channel
+    weather_routes._provide_mongo = provide_mongo
 
     app.include_router(health_router)
     app.include_router(weather_router)
