@@ -2,10 +2,12 @@ services:
   mongo:
     image: mongo:7
     container_name: weather-mongo
+    env_file: .env
     ports:
       - "27017:27017"
     volumes:
       - mongo_data:/data/db
+    networks: [appnet]
 
   weather-grpc:
     build:
@@ -19,6 +21,29 @@ services:
       - "50052:50052"
     depends_on:
       - mongo
+    networks: [appnet]
+
+  gateway:
+    build:
+      context: .
+      dockerfile: Dockerfile.gateway
+    container_name: weather-gateway
+    env_file: .env
+    environment:
+      FRONTEND_ORIGIN: "http://localhost:5173,http://127.0.0.1:5173"
+      GRPC_HOST: weather-grpc
+      GRPC_PORT: "50052"
+    ports:
+      - "8080:8080"
+    depends_on:
+      - weather-grpc
+    volumes:
+      - ./services/weather/interfaces/grpc/generated:/app/services/weather/interfaces/grpc/generated:ro
+    networks: [appnet]
 
 volumes:
   mongo_data:
+
+networks:
+  appnet:
+    driver: bridge

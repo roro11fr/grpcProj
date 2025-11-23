@@ -1,0 +1,19 @@
+FROM python:3.12-slim
+
+WORKDIR /app
+ENV PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1 PYTHONPATH=/app
+
+COPY requirements.txt /app/requirements.txt
+RUN pip install --no-cache-dir -r /app/requirements.txt
+
+COPY gateway /app/gateway
+
+RUN mkdir -p /app/services/weather/interfaces/grpc/generated && \
+    touch /app/services/__init__.py \
+          /app/services/weather/__init__.py \
+          /app/services/weather/interfaces/__init__.py \
+          /app/services/weather/interfaces/grpc/__init__.py \
+          /app/services/weather/interfaces/grpc/generated/__init__.py
+
+EXPOSE 8080
+CMD ["uvicorn", "gateway.main:app", "--host", "0.0.0.0", "--port", "8080"]
