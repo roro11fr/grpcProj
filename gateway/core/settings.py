@@ -15,7 +15,7 @@ class Settings:
 
         # gRPC target & auth
         self.grpc_host = os.getenv("GRPC_HOST", "weather-grpc")
-        self.grpc_port = int(os.getenv("GRPC_PORT", "50051"))
+        self.grpc_port = int(os.getenv("GRPC_PORT", "50052"))
         self.grpc_api_key = os.getenv("GRPC_API_KEY", "")
 
         # Mongo

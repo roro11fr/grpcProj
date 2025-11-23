@@ -17,6 +17,7 @@ services:
     env_file: .env
     environment:
       MONGO_URI: "mongodb://mongo:27017"
+      PYTHONBUFFERED: "1"
     ports:
       - "50052:50052"
     depends_on:

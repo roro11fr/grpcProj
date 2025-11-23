@@ -15,13 +15,11 @@ from gateway.services.grpc_client import create_channel
 
 @asynccontextmanager
 async def lifespan(app: FastAPI) -> AsyncIterator[None]:
-    # init shared resources
     app.state.grpc_channel = create_channel()
     app.state.mongo_client = create_mongo_client()
     try:
         yield
     finally:
-        # cleanup
         await app.state.grpc_channel.close()
         app.state.mongo_client.close()
 
@@ -38,20 +36,18 @@ def create_app() -> FastAPI:
         allow_headers=["*"],
     )
 
-    # Provide dependencies to routers
+    from gateway.routes import weather as weather_routes
+
     def provide_channel() -> Channel:
         return app.state.grpc_channel
 
     def provide_mongo() -> AsyncIOMotorClient:
         return app.state.mongo_client
 
-    # Wire providers into router module
-    from gateway.routes import weather as weather_routes
-
     weather_routes._provide_channel = provide_channel  # type: ignore
     weather_routes._provide_mongo = provide_mongo  # type: ignore
 
-    # Routers
     app.include_router(health_router)
     app.include_router(weather_router)
+
     return app
