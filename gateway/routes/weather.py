@@ -1,7 +1,7 @@
 from datetime import datetime, timezone
 from typing import Annotated, Dict, List
 
-from fastapi import APIRouter, Depends, HTTPException, Query
+from fastapi import APIRouter, Depends, HTTPException, Query, Request
 from grpc.aio import AioRpcError, Channel
 from motor.motor_asyncio import AsyncIOMotorClient
 
@@ -14,18 +14,24 @@ from services.weather.interfaces.grpc.generated import weather_pb2
 router = APIRouter(prefix="/api", tags=["weather"])
 
 
-def _provide_channel() -> Channel:
-    raise RuntimeError("Channel provider not wired")
+def get_channel(req: Request) -> Channel:
+    ch = getattr(req.app.state, "grpc_channel", None)
+    if ch is None:
+        raise HTTPException(status_code=500, detail="gRPC channel not ready")
+    return ch
 
 
-def _provide_mongo() -> AsyncIOMotorClient:
-    raise RuntimeError("Mongo provider not wired")
+def get_mongo(req: Request) -> AsyncIOMotorClient:
+    cli = getattr(req.app.state, "mongo_client", None)
+    if cli is None:
+        raise HTTPException(status_code=500, detail="Mongo client not ready")
+    return cli
 
 
 @router.get("/weather", response_model=WeatherOut)
 async def get_weather(
     city: str = Query(..., min_length=1),
-    channel: Annotated[Channel, Depends(_provide_channel)] = None,
+    channel: Annotated[Channel, Depends(get_channel)] = None,
 ):
     try:
         stub = create_stub(channel)
@@ -50,19 +56,25 @@ async def get_weather(
 
 @router.get("/recent")
 async def get_recent(
-    limit: int = Query(2, ge=1, le=20),
-    mongo_client: Annotated[AsyncIOMotorClient, Depends(_provide_mongo)] = None,
-) -> Dict[str, List[RecentOut]]:
-    try:
-        coll = get_collection(mongo_client)
-        cursor = coll.find({}, {"_id": 0}).sort("observed_at_unix", -1).limit(limit)
-        docs = await cursor.to_list(length=limit)
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"DB error: {e}")
+    limit: int = Query(10, ge=1, le=5000),
+    city: str | None = Query(None, min_length=1),
+    mongo: Annotated[AsyncIOMotorClient, Depends(get_mongo)] = None,
+):
+    coll = get_collection(mongo)
+    find_filter: Dict = {}
+    if city:
+        find_filter["city"] = city
+
+    cursor = (
+        coll.find(find_filter, projection={"_id": 0})
+        .sort("observed_at_unix", -1)
+        .limit(limit)
+    )
+    docs: List[Dict] = await cursor.to_list(length=limit)
 
     items: list[RecentOut] = []
-    for d in docs:
-        unix_ts = int(d.get("observed_at_unix", 0) or 0)
+    for d in reversed(docs):
+        unix_ts = int(d.get("observed_at_unix") or 0)
         iso_ts = (
             datetime.fromtimestamp(unix_ts, tz=timezone.utc)
             .isoformat()
